@@ -1,0 +1,8 @@
+---
+
+- name: get docker-compose scripts
+  get_url:
+    url: "https://github.com/docker/compose/releases/download/1.18.0/docker-compose-Linux-{{ ansible_machine }}"
+    dest: /usr/local/bin/docker-compose
+    mode: 0755
+  become: yes

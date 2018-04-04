@@ -1,0 +1,40 @@
+---
+- name: install docker dependencies
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: latest
+  become: yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+
+- name: add docker apt key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  become: yes
+
+- name: add docker apt repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: install docker ce
+  apt:
+    name: docker-ce
+    state: present
+  become: yes
+
+- name: add local user to docker group
+  user:
+    name: "{{ local_user }}"
+    groups: docker
+    append: yes
+    state: present
+  become: yes
+  when: local_user is defined
